@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Catálogo de Productos</title>
+
+        <!-- Google Fonts: Inter para un look moderno y fino -->
+        <link href="https://fonts.googleapis.com" rel="stylesheet">
+        <!-- Bootstrap 5.3 -->
+        <link href="https://cdn.jsdelivr.net" rel="stylesheet">
+
+        <style>
+            :root {
+                --border-color: #e5e7eb;
+                --text-main: #111827;
+                --text-muted: #6b7280;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #ffffff;
+                color: var(--text-main);
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* Header Minimalista */
+            .navbar-minimal {
+                border-bottom: 1px solid var(--border-color);
+                padding: 1.5rem 0;
+                margin-bottom: 3rem;
+            }
+
+            .navbar-brand {
+                font-weight: 600;
+                letter-spacing: -0.025em;
+                font-size: 1.5rem;
+                color: var(--text-main) !important;
+            }
+
+            /* Tabla Estilo Documentación (Limpia) */
+            .table-container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .table {
+                border-collapse: separate;
+                border-spacing: 0;
+                width: 100%;
+            }
+
+            .table thead th {
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                border-bottom: 1px solid var(--border-color);
+                padding: 1rem;
+                background: #f9fafb;
+            }
+
+            .table tbody td {
+                padding: 1.25rem 1rem;
+                border-bottom: 1px solid var(--border-color);
+                font-size: 0.95rem;
+                color: #374151;
+            }
+
+            /* Efecto sutil en la fila */
+            .table tbody tr:hover {
+                background-color: #fcfcfd;
+            }
+
+            .text-id {
+                font-family: monospace;
+                color: #9ca3af;
+                font-size: 0.85rem;
+            }
+
+            .product-name {
+                font-weight: 400;
+            }
+
+            .badge-count {
+                font-weight: 400;
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                border: 1px solid var(--border-color);
+                padding: 0.2rem 0.6rem;
+                border-radius: 20px;
+                margin-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- Header Sencillo -->
+        <nav class="navbar-minimal">
+            <div class="container d-flex justify-content-between align-items-center">
+                <span class="navbar-brand">Inventario General</span>
+                <span class="badge-count" th:text="${#lists.size(items)} + ' productos'">0 productos</span>
+            </div>
+        </nav>
+
+        <!-- Contenido Principal -->
+        <main class="container table-container">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th style="width: 150px;">Referencia</th>
+                        <th>Nombre del Producto</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Bucle de productos -->
+                    <tr th:each="p : ${items}">
+                        <td class="text-id" th:text="'#' + ${#numbers.formatInteger(p.id, 4)}">#0001</td>
+                        <td class="product-name" th:text="${p.name}">Nombre elegante del producto</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="mt-5 mb-5 pt-4 border-top text-center">
+                <p class="text-muted small">© 2026 Catálogo Corporativo — Sistema H2 Engine</p>
+            </footer>
+        </main>
+    </body>
+</html>
