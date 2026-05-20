@@ -1,0 +1,41 @@
+name: build & test
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+jobs:
+  build:
+    runs-on:
+      ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v6
+      - name: build
+        uses: spring-io/spring-gradle-build-action@v2
+        with:
+          java-version: 25
+      - name: Run Coverage
+        run: |
+          chmod +x gradlew
+          ./gradlew test
+      - name: Check coverage
+        id: JaCoCo
+        uses: madrapps/jacoco-report@v1.7.2
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80
+      - name: Fail if overall coverage is less than 80%
+        if: ${{ steps.JaCoCo.outputs.coverage-overall < 80.0 }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Overall coverage is less than 80%!')
+      - name: Check formatter
+        uses: dbelyaev/action-checkstyle@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          checkstyle_config: ${{ github.workspace }}/config/checkstyle/checkstyle.xml
+          fail_level: error
