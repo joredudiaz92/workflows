@@ -10,6 +10,12 @@ pipeline {
 
     stages {
         stage('Build Java App') {
+            agent {
+                docker {
+                    image 'eclipse-temurin:25-jdk-alpine'
+                    args '-v $HOME/.gradle:/root/.gradle'
+                }
+            }
             steps {
                 echo 'Building Java App...'
                 sh 'chmod +x gradlew'
