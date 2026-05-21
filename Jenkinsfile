@@ -40,10 +40,10 @@ pipeline {
         }
     }
 
-    post {
+    /*post {
         always {
             sh "docker rmi ${IMAGE_FULL} || true"
             sh "docker rmi ${REGISTRY_USER}/${IMAGE_NAME}:latest || true"
         }
-    }
+    }*/
 }
