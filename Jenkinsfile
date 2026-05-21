@@ -1,20 +1,44 @@
 pipeline {
     agent any
+
+    environment {
+        REGISTRY_USER = 'joredudiaz92'
+        IMAGE_NAME    = 'workflows'
+        IMAGE_TAG     = "${BUILD_NUMBER}"
+        IMAGE_FULL    = "${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+    }
+
     stages {
-        stage('Build') {
+        stage('Build Java App') {
             steps {
-                echo 'Building...'
+                echo 'Building Java App...'
+                sh './gradlew clean build -x checkstyleMain -x checkstyleTest -x test'
             }
         }
-        stage('Test') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Testing...'
+                script {
+                    echo 'Building Docker image...'
+                    dockerImage = docker.build("${IMAGE_FULL}")
+                }
             }
         }
-        stage('Deploy') {
+        stage('Push to Docker Hub') {
             steps {
-                echo 'Deploying...'
+                script {
+                    docker.withRegistry('https://docker.io', 'docker-hub-credentials') {
+                        dockerImage.push()
+                        dockerImage.push('latest') // Optional: Also tag and push as latest
+                    }
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            sh "docker rmi ${IMAGE_FULL} || true"
+            sh "docker rmi ${REGISTRY_USER}/${IMAGE_NAME}:latest || true"
         }
     }
 }
