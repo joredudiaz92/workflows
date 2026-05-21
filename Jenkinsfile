@@ -8,14 +8,12 @@ pipeline {
         IMAGE_FULL    = "${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
+    tools {
+        jdk 'Java25'
+    }
+
     stages {
         stage('Build Java App') {
-            agent {
-                docker {
-                    image 'eclipse-temurin:25-jdk-alpine'
-                    args '-v $HOME/.gradle:/root/.gradle'
-                }
-            }
             steps {
                 echo 'Building Java App...'
                 sh 'chmod +x gradlew'
