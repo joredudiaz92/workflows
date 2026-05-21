@@ -12,6 +12,7 @@ pipeline {
         stage('Build Java App') {
             steps {
                 echo 'Building Java App...'
+                sh 'chmod +x gradlew'
                 sh './gradlew clean build -x checkstyleMain -x checkstyleTest -x test'
             }
         }
