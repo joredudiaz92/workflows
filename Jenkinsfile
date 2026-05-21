@@ -10,6 +10,7 @@ pipeline {
 
     tools {
         jdk 'Java25'
+        dockerTool 'Moby-Moby'
     }
 
     stages {
