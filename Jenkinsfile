@@ -29,17 +29,17 @@ pipeline {
                 script {
                     docker.withRegistry('', 'docker-hub-credentials') {
                         dockerImage.push()
-                        dockerImage.push('latest') // Optional: Also tag and push as latest
+                        dockerImage.push('latest')
                     }
                 }
             }
         }
     }
 
-    /*post {
+    post {
         always {
             sh "docker rmi ${IMAGE_FULL} || true"
             sh "docker rmi ${REGISTRY_USER}/${IMAGE_NAME}:latest || true"
         }
-    }*/
+    }
 }
