@@ -8,10 +8,6 @@ pipeline {
         IMAGE_FULL    = "${REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
-    tools {
-        jdk 'Java25'
-    }
-
     stages {
         stage('Build Java App') {
             steps {
